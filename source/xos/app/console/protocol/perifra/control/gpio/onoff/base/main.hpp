@@ -60,7 +60,41 @@ public:
     typedef typename extends::string_reader_t string_reader_t;
 
     /// constructor / destructor
-    maint(): run_(0) {
+    maint()
+    : run_(0),
+      
+      power_on_request_("{\"control\":{\"power\":{\"set_power_state\":{\"state\":\"on\"}}}}"), 
+      power_off_request_("{\"control\":{\"power\":{\"set_power_state\":{\"state\":\"off\"}}}}"),
+      power_state_request_("{\"control\":{\"power\":{\"get_power_state\":{\"state\":\"all\"}}}}"),
+
+      power_on_response_("{\"control\":{\"power\":{\"power_state\":{\"state\":\"on\"}}}}"), 
+      power_off_response_("{\"control\":{\"power\":{\"power_state\":{\"state\":\"off\"}}}}"),
+      power_unknown_response_("{\"control\":{\"power\":{\"power_state\":{\"state\":\"unknown\"}}}}"),
+    
+      system_restart_request_("{\"control\":{\"system\":{\"system_action\":{\"action\":\"restart\"}}}}"),
+      system_start_request_("{\"control\":{\"system\":{\"system_action\":{\"action\":\"start\"}}}}"),
+      system_stop_request_("{\"control\":{\"system\":{\"system_action\":{\"action\":\"stop\"}}}}"),
+
+      system_restart_response_("{\"control\":{\"system\":\"restart\"}}"),
+      system_start_response_("{\"control\":{\"system\":\"start\"}}"),
+      system_stop_response_("{\"control\":{\"system\":\"stop\"}}"),
+      system_state_unknown_response_("{\"control\":{\"system\":{\"system_state\":{\"state\":\"unknown\"}}}}"),
+
+      system_info_request_("{\"control\":{\"system\":{\"get_system_info\":{\"info\":\"all\"}}}}"),
+      system_info_response_
+      ("{\"control\":{\"system\":{\"system_info\":"
+       "{\"software_version\":\"power-control-0.0.0-4/28/2025\"},"
+       "{\"hardware_type\":\"power.control.switch\"},"
+       "{\"hardware_model\":\"power.control.switch\"},"
+       "{\"hardware_version\":\"power-control-0.0.0-4/28/2025\"},"
+       "{\"device_id\":\"685BF690-2476-11F0-8C89-2DC5D1B61074\"},"
+       "{\"hardware_id\":\"720E85F4-2476-11F0-86F9-B9C955FDD95D\"},"
+       "{\"firmware_id\":\"7F044B4A-2476-11F0-8B53-E7500F8D1C27\"},"
+       "{\"oem_id\":\"95BD336A-2476-11F0-8A1D-97AC3A782B53\"},"
+       "{\"ethernet_address\":\"00:00:00:00:00:00\"}},"
+       "{\"device_name\":\"power-control-switch\"},"
+       "{\"device_alias\":\"power-control-switch\"}}}}"),
+      system_info_unknown_response_("{\"control\":{\"system\":{\"system_info\":{\"info\":\"unknown\"}}}}") {
     }
     virtual ~maint() {
     }
@@ -104,10 +138,102 @@ protected:
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
+    /// ...power...request
+    /// ...
+    virtual string_t& set_power_on_request() {
+        string_t& to = this->power_on_request();
+        this->set_request(to);
+        return this->request();
+    }
+    virtual string_t& power_on_request() const {
+        return (string_t&)power_on_request_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    virtual string_t& set_power_off_request() {
+        string_t& to = this->power_off_request();
+        this->set_request(to);
+        return this->request();
+    }
+    virtual string_t& power_off_request() const {
+        return (string_t&)power_off_request_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    virtual string_t& set_power_state_request() {
+        string_t& to = this->power_state_request();
+        this->set_request(to);
+        return this->request();
+    }
+    virtual string_t& power_state_request() const {
+        return (string_t&)power_state_request_;
+    }
+    /// ...
+    /// ...power...request
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
+    /// ...power...response
+    /// ...
+    virtual string_t& power_on_response() const {
+        return (string_t&)power_on_response_;
+    }
+    virtual string_t& power_off_response() const {
+        return (string_t&)power_off_response_;
+    }
+    virtual string_t& power_unknown_response() const {
+        return (string_t&)power_unknown_response_;
+    }
+    /// ...
+    /// ...power...response
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
+    virtual string_t& set_system_restart_request() {
+        string_t& to = this->system_restart_request();
+        this->set_request(to);
+        return this->request();
+    }
+    virtual string_t& system_restart_request() const {
+        return (string_t&)system_restart_request_;
+    }
+    virtual string_t& system_restart_response() const {
+        return (string_t&)system_restart_response_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    virtual string_t& set_system_stop_request() {
+        string_t& to = this->system_stop_request();
+        this->set_request(to);
+        return this->request();
+    }
+    virtual string_t& system_stop_request() const {
+        return (string_t&)system_stop_request_;
+    }
+    virtual string_t& system_stop_response() const {
+        return (string_t&)system_stop_response_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    virtual string_t& set_system_info_request() {
+        string_t& to = this->system_info_request();
+        this->set_request(to);
+        return this->request();
+    }
+    virtual string_t& system_info_request() const {
+        return (string_t&)system_info_request_;
+    }
+    virtual string_t& system_info_response() const {
+        return (string_t&)system_info_response_;
+    }
+    virtual string_t& system_info_unknown_response() const {
+        return (string_t&)system_info_unknown_response_;
+    }
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
 protected:
+    string_t power_on_request_, power_off_request_, power_state_request_;
+    string_t power_on_response_, power_off_response_, power_unknown_response_;
+    string_t system_restart_request_, system_start_request_, system_stop_request_;
+    string_t system_restart_response_, system_start_response_, system_stop_response_, system_state_unknown_response_;
+    string_t system_info_request_, system_info_response_, system_info_unknown_response_;
 }; /// class maint 
 typedef maint<> main;
 

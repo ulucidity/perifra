@@ -101,6 +101,65 @@ protected:
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
+    /// ...gpio_power_on_run...
+    virtual int gpio_power_on_run_set(int argc, char_t** argv, char_t** env) {
+        int err = 0;
+        if (!(err = this->unset_gpio_power_on_run(argc, argv, env))) {
+            if (!(err = this->gpio_power_on_run_unset(argc, argv, env))) {
+
+                if (!(err = this->set_output_request_run(argc, argv, env))) {
+                    if (!(err = this->output_request_run_set(argc, argv, env))) {
+                        this->set_power_on_request();
+                    } else {
+                    }
+                } else {
+                }
+            } else {
+            }
+        } else {
+        }
+        return err;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    /// ...gpio_power_off_run...
+    virtual int gpio_power_off_run_set(int argc, char_t** argv, char_t** env) {
+        int err = 0;
+        if (!(err = this->unset_gpio_power_off_run(argc, argv, env))) {
+            if (!(err = this->gpio_power_off_run_unset(argc, argv, env))) {
+
+                if (!(err = this->set_output_request_run(argc, argv, env))) {
+                    if (!(err = this->output_request_run_set(argc, argv, env))) {
+                        this->set_power_off_request();
+                    } else {
+                    }
+                } else {
+                }
+            } else {
+            }
+        } else {
+        }
+        return err;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    /// ...gpio_get_power_state_run...
+    virtual int gpio_get_power_state_run_set(int argc, char_t** argv, char_t** env) {
+        int err = 0;
+        if (!(err = this->unset_gpio_get_power_state_run(argc, argv, env))) {
+            if (!(err = this->gpio_get_power_state_run_unset(argc, argv, env))) {
+
+                if (!(err = this->set_output_request_run(argc, argv, env))) {
+                    if (!(err = this->output_request_run_set(argc, argv, env))) {
+                        this->set_power_state_request();
+                    } else {
+                    }
+                } else {
+                }
+            } else {
+            }
+        } else {
+        }
+        return err;
+    }
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////

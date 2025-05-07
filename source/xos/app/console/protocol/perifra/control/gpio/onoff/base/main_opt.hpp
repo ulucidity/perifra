@@ -22,6 +22,7 @@
 #define XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_ONOFF_BASE_MAIN_OPT_HPP
 
 #include "xos/app/console/perifra/control/gpio/onoff/main.hpp"
+#include "xos/app/console/protocol/perifra/control/gpio/base/main.hpp"
 
 ///////////////////////////////////////////////////////////////////////
 #define XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_ONOFF_BASE_MAIN_OPTIONS_CHARS_EXTEND \
@@ -29,13 +30,26 @@
 #define XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_ONOFF_BASE_MAIN_OPTIONS_OPTIONS_EXTEND \
 
 ///////////////////////////////////////////////////////////////////////
+#define XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_ONOFF_BASE_MAIN_STATE_OPTIONS_CHARS \
+   XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_ONOFF_BASE_MAIN_OPTIONS_CHARS_EXTEND \
+   XOS_APP_CONSOLE_PERIFRA_CONTROL_GPIO_ONOFF_MAIN_STATE_OPTIONS_CHARS_EXTEND \
+   XOS_APP_CONSOLE_PROTOCOL_BASE_MAIN_OPTIONS_CHARS \
+
+#define XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_ONOFF_BASE_MAIN_STATE_OPTIONS_OPTIONS \
+   XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_ONOFF_BASE_MAIN_OPTIONS_OPTIONS_EXTEND \
+   XOS_APP_CONSOLE_PERIFRA_CONTROL_GPIO_ONOFF_MAIN_STATE_OPTIONS_OPTIONS_EXTEND \
+   XOS_APP_CONSOLE_PROTOCOL_BASE_MAIN_OPTIONS_OPTIONS \   
+
+///////////////////////////////////////////////////////////////////////
 #define XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_ONOFF_BASE_MAIN_OPTIONS_CHARS \
    XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_ONOFF_BASE_MAIN_OPTIONS_CHARS_EXTEND \
-   XOS_APP_CONSOLE_PERIFRA_CONTROL_GPIO_ONOFF_MAIN_OPTIONS_CHARS \
+   XOS_APP_CONSOLE_PERIFRA_CONTROL_GPIO_ONOFF_MAIN_OPTIONS_CHARS_EXTEND \
+   XOS_APP_CONSOLE_PROTOCOL_BASE_MAIN_OPTIONS_CHARS \
 
 #define XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_ONOFF_BASE_MAIN_OPTIONS_OPTIONS \
    XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_ONOFF_BASE_MAIN_OPTIONS_OPTIONS_EXTEND \
-   XOS_APP_CONSOLE_PERIFRA_CONTROL_GPIO_ONOFF_MAIN_OPTIONS_OPTIONS \
+   XOS_APP_CONSOLE_PERIFRA_CONTROL_GPIO_ONOFF_MAIN_OPTIONS_OPTIONS_EXTEND \
+   XOS_APP_CONSOLE_PROTOCOL_BASE_MAIN_OPTIONS_OPTIONS \   
 
 ///////////////////////////////////////////////////////////////////////
 #define XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_ONOFF_BASE_MAIN_ARGS 0
@@ -53,7 +67,16 @@ namespace base {
 
 /// class main_optt
 template 
-<class TExtends = xos::app::console::perifra::control::gpio::onoff::maint<>,  class TImplements = typename TExtends::implements>
+<class TExtends = xos::app::console::perifra::control::gpio::onoff::maint
+ <xos::app::console::perifra::control::gpio::onoff::main_optt
+ <xos::app::console::perifra::control::gpio::base::maint
+ <xos::app::console::perifra::control::gpio::base::main_optt
+ <xos::app::console::protocol::perifra::control::gpio::base::maint
+ <xos::app::console::protocol::perifra::control::gpio::base::main_optt
+ <xos::app::console::protocol::ttp::base::maint
+ <xos::app::console::protocol::ttp::base::main_optt
+ <xos::app::console::protocol::base::maint
+ <xos::app::console::protocol::base::main_optt<> > > > > > > > > >,  class TImplements = typename TExtends::implements>
 
 class main_optt: virtual public TImplements, public TExtends {
 public:

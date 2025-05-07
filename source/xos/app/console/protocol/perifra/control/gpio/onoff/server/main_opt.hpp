@@ -22,6 +22,7 @@
 #define XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_ONOFF_SERVER_MAIN_OPT_HPP
 
 #include "xos/app/console/protocol/perifra/control/gpio/onoff/base/main.hpp"
+#include "xos/app/console/protocol/perifra/control/gpio/server/main.hpp"
 
 namespace xos {
 namespace app {

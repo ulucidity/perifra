@@ -595,6 +595,43 @@ protected:
     //////////////////////////////////////////////////////////////////////////
     /// ...gpio...request
     /// ...
+    virtual string_t& set_gpio_write_request_on() {
+        return set_gpio_write_request(true);
+    }
+    virtual string_t& set_gpio_write_request_off() {
+        return set_gpio_write_request(false);
+    }
+    virtual string_t& set_gpio_write_request(const bool& on) {
+        string_t& request = this->request();
+        const string_t& begin_gpio_write_request = this->begin_gpio_write_request(),
+                        middle_gpio_write_request = this->middle_gpio_write_request(),
+                        end_gpio_write_request = this->end_gpio_write_request();
+        size_t begin_gpio_write_request_length = 0,
+               middle_gpio_write_request_length = 0,
+               end_gpio_write_request_length = 0,
+               gpio_write_request_length = 0,
+               length = 0;
+
+        gpio_write_request_length = (begin_gpio_write_request_length = begin_gpio_write_request.length());
+        gpio_write_request_length += (middle_gpio_write_request_length = middle_gpio_write_request.length());
+        gpio_write_request_length += (end_gpio_write_request_length = end_gpio_write_request.length());
+        
+        if (0 < (length = gpio_write_request_length)) {
+            string_t& gpio_request = this->gpio_request();
+            uint8_t value = ((on)?(this->gpio_level_on()):(this->gpio_level_off())),
+                    number = this->write_gpio();
+            unsigned_to_string pin_value(value), pin_number(number);
+            
+            gpio_request.assign(begin_gpio_write_request);
+            gpio_request.append(pin_number);
+            gpio_request.append(middle_gpio_write_request);
+            gpio_request.append(pin_value);
+            gpio_request.append(end_gpio_write_request);
+            this->set_request(gpio_request);
+        } else {
+        }
+        return (string_t&)request;
+    }
     virtual string_t& begin_gpio_write_request() const {
         return (string_t&)begin_gpio_write_request_;
     }
@@ -604,6 +641,7 @@ protected:
     virtual string_t& end_gpio_write_request() const {
         return (string_t&)end_gpio_write_request_;
     }
+    //////////////////////////////////////////////////////////////////////////
     virtual string_t& begin_gpio_read_request() const {
         return (string_t&)begin_gpio_read_request_;
     }
