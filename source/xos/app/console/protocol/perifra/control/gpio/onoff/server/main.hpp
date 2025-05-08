@@ -60,7 +60,8 @@ public:
     typedef typename extends::string_reader_t string_reader_t;
 
     /// constructor / destructor
-    maint(): run_(0) {
+    maint()
+    : run_(0) {
     }
     virtual ~maint() {
     }
@@ -108,6 +109,7 @@ protected:
 
     //////////////////////////////////////////////////////////////////////////
 protected:
+    string_t response_;
 }; /// class maint 
 typedef maint<> main;
 

@@ -21,7 +21,7 @@
 #ifndef XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_BASE_MAIN_OPT_HPP
 #define XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_BASE_MAIN_OPT_HPP
 
-#include "xos/app/console/protocol/ttp/base/main.hpp"
+#include "xos/app/console/protocol/crlf/base/main.hpp"
 
 ///////////////////////////////////////////////////////////////////////
 #define XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_BASE_MAIN_OPTIONS_CHARS_EXTEND \
@@ -31,11 +31,11 @@
 ///////////////////////////////////////////////////////////////////////
 #define XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_BASE_MAIN_OPTIONS_CHARS \
    XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_BASE_MAIN_OPTIONS_CHARS_EXTEND \
-   XOS_APP_CONSOLE_PROTOCOL_TTP_BASE_MAIN_OPTIONS_CHARS \
+   XOS_APP_CONSOLE_PROTOCOL_CRLF_BASE_MAIN_OPTIONS_CHARS \
 
 #define XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_BASE_MAIN_OPTIONS_OPTIONS \
    XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_BASE_MAIN_OPTIONS_OPTIONS_EXTEND \
-   XOS_APP_CONSOLE_PROTOCOL_TTP_BASE_MAIN_OPTIONS_OPTIONS \
+   XOS_APP_CONSOLE_PROTOCOL_CRLF_BASE_MAIN_OPTIONS_OPTIONS \
 
 ///////////////////////////////////////////////////////////////////////
 #define XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_BASE_MAIN_ARGS 0
@@ -52,8 +52,8 @@ namespace base {
 
 /// class main_optt
 template 
-<class TExtends = xos::app::console::protocol::ttp::base::maint
- <xos::app::console::protocol::ttp::base::main_optt
+<class TExtends = xos::app::console::protocol::crlf::base::maint
+ <xos::app::console::protocol::crlf::base::main_optt
  <xos::app::console::protocol::base::maint
  <xos::app::console::protocol::base::main_optt<> > > >,  class TImplements = typename TExtends::implements>
 

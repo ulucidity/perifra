@@ -23,6 +23,7 @@
 
 #include "xos/app/console/protocol/perifra/control/gpio/onoff/base/main.hpp"
 #include "xos/app/console/protocol/perifra/control/gpio/client/main.hpp"
+#include "xos/app/console/protocol/crlf/client/main.hpp"
 
 ///////////////////////////////////////////////////////////////////////
 #define XOS_APP_CONSOLE_PERIFRA_CONTROL_GPIO_ONOFF_CLIENT_MAIN_OPTIONS_CHARS_EXTEND \
@@ -54,7 +55,22 @@ namespace client {
 
 /// class main_optt
 template 
-<class TExtends = xos::app::console::protocol::perifra::control::gpio::onoff::base::maint<>,  class TImplements = typename TExtends::implements>
+<class TExtends = xos::app::console::protocol::perifra::control::gpio::onoff::base::maint
+ <xos::app::console::protocol::perifra::control::gpio::onoff::base::main_optt
+ <xos::app::console::perifra::control::gpio::onoff::maint
+ <xos::app::console::perifra::control::gpio::onoff::main_optt
+ <xos::app::console::perifra::control::gpio::base::maint
+ <xos::app::console::perifra::control::gpio::base::main_optt
+ <xos::app::console::protocol::perifra::control::gpio::base::maint
+ <xos::app::console::protocol::perifra::control::gpio::base::main_optt
+ <xos::app::console::protocol::crlf::client::maint
+ <xos::app::console::protocol::crlf::client::main_optt
+ <xos::app::console::protocol::crlf::base::maint
+ <xos::app::console::protocol::crlf::base::main_optt
+ <xos::app::console::protocol::client::maint
+ <xos::app::console::protocol::client::main_optt
+ <xos::app::console::protocol::base::maint
+ <xos::app::console::protocol::base::main_optt<> > > > > > > > > > > > > > > >,  class TImplements = typename TExtends::implements>
 
 class main_optt: virtual public TImplements, public TExtends {
 public:
