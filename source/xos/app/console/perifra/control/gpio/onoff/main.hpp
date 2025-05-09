@@ -16,14 +16,14 @@
 ///   File: main.hpp
 ///
 /// Author: $author$
-///   Date: 5/6/2025
+///   Date: 5/6/2025, 5/9/2025
 //////////////////////////////////////////////////////////////////////////
 #ifndef XOS_APP_CONSOLE_PERIFRA_CONTROL_GPIO_ONOFF_MAIN_HPP
 #define XOS_APP_CONSOLE_PERIFRA_CONTROL_GPIO_ONOFF_MAIN_HPP
 
 #include "xos/os/sleep.hpp"
 #include "xos/app/console/perifra/control/gpio/onoff/main_opt.hpp"
-#include "xos/gpio/raspberrypi/raspberrypios/pigpio/gpio.hpp"
+//#include "xos/gpio/raspberrypi/raspberrypios/pigpio/gpio.hpp"
 
 #define XOS_APP_CONSOLE_GPIO_ONOFF_MSECONDS_MIN 300
 #define XOS_APP_CONSOLE_GPIO_ONOFF_MSECONDS_MAX 5000
@@ -78,7 +78,7 @@ public:
     typedef typename extends::string_reader_t string_reader_t;
 
     typedef typename extends::gpio_t gpio_t;
-    typedef xos::gpio::raspberrypi::raspberrypios::pigpio::gpio pigpio_gpio_t;
+    //typedef xos::gpio::raspberrypi::raspberrypios::pigpio::gpio pigpio_gpio_t;
 
     /// constructor / destructor
     maint()
@@ -524,9 +524,9 @@ protected:
     }
     //////////////////////////////////////////////////////////////////////////
     /// ...gpio
-    virtual gpio_t& gpio() const {
+    /*virtual gpio_t& gpio() const {
         return (gpio_t&)gpio_;
-    }
+    }*/
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
@@ -536,7 +536,7 @@ protected:
     uint8_t gpio_on_pin_, gpio_off_pin_, gpio_on_value_, gpio_off_value_;
     uint8_t gpio_is_on_pin_, gpio_is_off_pin_, gpio_is_on_value_, gpio_is_off_value_;
     bool gpio_is_on_, gpio_is_off_, gpio_is_active_low_;
-    pigpio_gpio_t gpio_;
+    //pigpio_gpio_t gpio_;
 }; /// class maint 
 typedef maint<> main;
 

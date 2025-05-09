@@ -16,13 +16,13 @@
 ///   File: main.hpp
 ///
 /// Author: $author$
-///   Date: 12/29/2022
+///   Date: 12/29/2022, 5/9/2025
 ///////////////////////////////////////////////////////////////////////
 #ifndef XOS_APP_CONSOLE_GPIO_MAIN_HPP
 #define XOS_APP_CONSOLE_GPIO_MAIN_HPP
 
 #include "xos/app/console/gpio/main_opt.hpp"
-#include "xos/gpio/raspberrypi/raspberrypios/pigpio/gpio.hpp"
+//#include "xos/gpio/raspberrypi/raspberrypios/pigpio/gpio.hpp"
 
 namespace xos {
 namespace app {
@@ -64,7 +64,7 @@ protected:
     typedef typename extends::err_writer_t err_writer_t;
 
     typedef typename extends::gpio_t gpio_t;
-    typedef xos::gpio::raspberrypi::raspberrypios::pigpio::gpio pigpio_gpio_t;
+    //typedef xos::gpio::raspberrypi::raspberrypios::pigpio::gpio pigpio_gpio_t;
     
     /// ...run
     int (derives::*run_)(int argc, char_t** argv, char_t** env);
@@ -79,12 +79,12 @@ protected:
     }
 
     /// ...gpio
-    virtual gpio_t& gpio() const {
+    /*virtual gpio_t& gpio() const {
         return (gpio_t&)gpio_;
-    }
+    }*/
 
 protected:
-    pigpio_gpio_t gpio_;
+    //pigpio_gpio_t gpio_;
 }; /// class maint
 typedef maint<> main;
 
