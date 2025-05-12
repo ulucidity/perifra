@@ -16,7 +16,7 @@
 ///   File: main.hpp
 ///
 /// Author: $author$
-///   Date: 1/5/2025
+///   Date: 1/5/2025, 5/12/2025
 //////////////////////////////////////////////////////////////////////////
 #ifndef XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_BASE_MAIN_HPP
 #define XOS_APP_CONSOLE_PROTOCOL_PERIFRA_CONTROL_GPIO_BASE_MAIN_HPP
@@ -63,7 +63,41 @@ public:
     
     /// constructor / destructor
     maint()
-    : run_(0), 
+    : run_(0),
+
+      system_restart_request_("{\"gpio\":{\"system\":{\"system_action\":{\"action\":\"restart\"}}}}"),
+      system_start_request_("{\"gpio\":{\"system\":{\"system_action\":{\"action\":\"start\"}}}}"),
+      system_stop_request_("{\"gpio\":{\"system\":{\"system_action\":{\"action\":\"stop\"}}}}"),
+      
+      system_restart_response_("{\"gpio\":{\"system\":\"restart\"}}"),
+      system_start_response_("{\"gpio\":{\"system\":\"start\"}}"),
+      system_stop_response_("{\"gpio\":{\"system\":\"stop\"}}"),
+      system_state_unknown_response_("{\"gpio\":{\"system\":{\"system_state\":{\"state\":\"unknown\"}}}}"),
+      
+      system_info_request_("{\"gpio\":{\"system\":{\"get_system_info\":{\"info\":\"all\"}}}}"),
+      system_info_response_
+      ("{\"gpio\":{\"system\":{\"system_info\":"
+       "{\"software_version\":\"power-gpio-0.0.0-4/28/2025\"},"
+       "{\"hardware_type\":\"power.gpio.switch\"},"
+       "{\"hardware_model\":\"power.gpio.switch\"},"
+       "{\"hardware_version\":\"power-gpio-0.0.0-4/28/2025\"},"
+       "{\"device_id\":\"685BF690-2476-11F0-8C89-2DC5D1B61074\"},"
+       "{\"hardware_id\":\"720E85F4-2476-11F0-86F9-B9C955FDD95D\"},"
+       "{\"firmware_id\":\"7F044B4A-2476-11F0-8B53-E7500F8D1C27\"},"
+       "{\"oem_id\":\"95BD336A-2476-11F0-8A1D-97AC3A782B53\"},"
+       "{\"ethernet_address\":\"00:00:00:00:00:00\"}},"
+       "{\"device_name\":\"power-gpio-switch\"},"
+       "{\"device_alias\":\"power-gpio-switch\"}}}}"),
+      system_info_unknown_response_("{\"gpio\":{\"system\":{\"system_info\":{\"info\":\"unknown\"}}}}"),
+      
+      invalid_request_("{\"gpio\":{\"request\":\"invalid\"}}"), 
+      invalid_response_(invalid_request_),
+      
+      unknown_request_("{\"gpio\":{\"request\":\"unknown\"}}"), 
+      unknown_response_(unknown_request_),
+    
+      request_(unknown_request_),
+      response_(unknown_response_), 
       
       begin_gpio_write_request_("{\"gpio\":{\"write\":[{\"gpio\":\""), 
       middle_gpio_write_request_("\"},{\"level\":\""), 
@@ -642,6 +676,35 @@ protected:
         return (string_t&)end_gpio_write_request_;
     }
     //////////////////////////////////////////////////////////////////////////
+    virtual string_t& set_gpio_read_request() {
+        string_t& request = this->request();
+        const string_t& begin_gpio_read_request = this->begin_gpio_read_request(),
+                        middle_gpio_read_request = this->middle_gpio_read_request(),
+                        end_gpio_read_request = this->end_gpio_read_request();
+        size_t begin_gpio_read_request_length = 0,
+               middle_gpio_read_request_length = 0,
+               end_gpio_read_request_length = 0,
+               gpio_read_request_length = 0,
+               length = 0;
+
+        gpio_read_request_length = (begin_gpio_read_request_length = begin_gpio_read_request.length());
+        gpio_read_request_length += (middle_gpio_read_request_length = middle_gpio_read_request.length());
+        gpio_read_request_length += (end_gpio_read_request_length = end_gpio_read_request.length());
+        
+        if (0 < (length = gpio_read_request_length)) {
+            string_t& gpio_request = this->gpio_request();
+            uint8_t number = this->read_gpio();
+            unsigned_to_string pin_number(number);
+            
+            gpio_request.assign(begin_gpio_read_request);
+            gpio_request.append(pin_number);
+            gpio_request.append(middle_gpio_read_request);
+            gpio_request.append(end_gpio_read_request);
+            this->set_request(gpio_request);
+        } else {
+        }
+        return (string_t&)request;
+    }
     virtual string_t& begin_gpio_read_request() const {
         return (string_t&)begin_gpio_read_request_;
     }
@@ -832,7 +895,106 @@ protected:
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
+    /// ...system...
+    virtual string_t& set_system_restart_request() {
+        string_t& to = this->system_restart_request();
+        set_request(to);
+        return request();
+    }
+    virtual string_t& system_restart_request() const {
+        return (string_t&)system_restart_request_;
+    }
+    virtual string_t& system_restart_response() const {
+        return (string_t&)system_restart_response_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    virtual string_t& set_system_start_request() {
+        string_t& to = this->system_start_request();
+        set_request(to);
+        return request();
+    }
+    virtual string_t& system_start_request() const {
+        return (string_t&)system_start_request_;
+    }
+    virtual string_t& system_start_response() const {
+        return (string_t&)system_start_response_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    virtual string_t& set_system_stop_request() {
+        string_t& to = this->system_stop_request();
+        set_request(to);
+        return request();
+    }
+    virtual string_t& system_stop_request() const {
+        return (string_t&)system_stop_request_;
+    }
+    virtual string_t& system_stop_response() const {
+        return (string_t&)system_stop_response_;
+    }
+    virtual string_t& system_state_unknown_response() const {
+        return (string_t&)system_state_unknown_response_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    virtual string_t& set_system_info_request() {
+        string_t& to = this->system_info_request();
+        set_request(to);
+        return request();
+    }
+    virtual string_t& system_info_request() const {
+        return (string_t&)system_info_request_;
+    }
+    virtual string_t& system_info_response() const {
+        return (string_t&)system_info_response_;
+    }
+    virtual string_t& system_info_unknown_response() const {
+        return (string_t&)system_info_unknown_response_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
+    /// ...invalid...
+    virtual string_t& invalid_request() const {
+        return (string_t&)invalid_request_;
+    }
+    virtual string_t& invalid_response() const {
+        return (string_t&)invalid_response_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    ///...unknown...
+    virtual string_t& unknown_request() const {
+        return (string_t&)unknown_request_;
+    }
+    virtual string_t& unknown_response() const {
+        return (string_t&)unknown_response_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
+    virtual string_t& set_request(const string_t& to) {
+        string_t& request = this->request();
+        request.assign(to);
+        return request;
+    }
+    virtual string_t& request() const {
+        return (string_t&)request_;
+    }
+    virtual string_t& response() const {
+        return (string_t&)response_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
 protected:
+    string_t system_restart_request_, system_start_request_, system_stop_request_;
+    string_t system_restart_response_, system_start_response_, system_stop_response_, system_state_unknown_response_;
+    string_t system_info_request_, system_info_response_, system_info_unknown_response_;
+    string_t invalid_request_, invalid_response_;
+    string_t unknown_request_, unknown_response_;
+    string_t request_, response_;
+
     string_t begin_gpio_write_request_, middle_gpio_write_request_, end_gpio_write_request_, 
              begin_gpio_read_request_, middle_gpio_read_request_, end_gpio_read_request_, gpio_request_, 
              begin_gpio_level_response_, middle_gpio_level_response_, end_gpio_level_response_, gpio_response_;
