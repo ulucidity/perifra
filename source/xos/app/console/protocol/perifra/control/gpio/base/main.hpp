@@ -74,22 +74,6 @@ public:
       system_stop_response_("{\"gpio\":{\"system\":\"stop\"}}"),
       system_state_unknown_response_("{\"gpio\":{\"system\":{\"system_state\":{\"state\":\"unknown\"}}}}"),
       
-      system_info_request_("{\"gpio\":{\"system\":{\"get_system_info\":{\"info\":\"all\"}}}}"),
-      system_info_response_
-      ("{\"gpio\":{\"system\":{\"system_info\":"
-       "{\"software_version\":\"power-gpio-0.0.0-4/28/2025\"},"
-       "{\"hardware_type\":\"power.gpio.switch\"},"
-       "{\"hardware_model\":\"power.gpio.switch\"},"
-       "{\"hardware_version\":\"power-gpio-0.0.0-4/28/2025\"},"
-       "{\"device_id\":\"685BF690-2476-11F0-8C89-2DC5D1B61074\"},"
-       "{\"hardware_id\":\"720E85F4-2476-11F0-86F9-B9C955FDD95D\"},"
-       "{\"firmware_id\":\"7F044B4A-2476-11F0-8B53-E7500F8D1C27\"},"
-       "{\"oem_id\":\"95BD336A-2476-11F0-8A1D-97AC3A782B53\"},"
-       "{\"ethernet_address\":\"00:00:00:00:00:00\"}},"
-       "{\"device_name\":\"power-gpio-switch\"},"
-       "{\"device_alias\":\"power-gpio-switch\"}}}}"),
-      system_info_unknown_response_("{\"gpio\":{\"system\":{\"system_info\":{\"info\":\"unknown\"}}}}"),
-      
       invalid_request_("{\"gpio\":{\"request\":\"invalid\"}}"), 
       invalid_response_(invalid_request_),
       
@@ -297,6 +281,7 @@ protected:
 
         LOGGER_IS_LOGGED_INFO("(0 <= (result = gpio_implement.set_value(" << gpio << ", " << level << ")))...");
         if (0 <= (result = gpio_implement.set_value(gpio, level))) {
+            const int& write_gpio = this->write_gpio();
             const signed_to_string gpio_level_response_gpio(gpio), 
                                    gpio_level_response_level(result);
             const string_t& begin_gpio_level_response = this->begin_gpio_level_response(),
@@ -308,6 +293,25 @@ protected:
             response.append(middle_gpio_level_response);
             response.append(gpio_level_response_level);
             response.append(end_gpio_level_response);
+            if (!(write_gpio != gpio)) {
+                const int& gpio = this->read_gpio();
+                LOGGER_IS_LOGGED_INFO("(0 <= (result = gpio_implement.get_value(" << gpio << ")))...");
+                if (0 <= (result = gpio_implement.get_value(gpio))) {
+                    const signed_to_string gpio_level_response_gpio(gpio), 
+                                           gpio_level_response_level(result);
+                    const string_t& begin_gpio_level_response = this->begin_gpio_level_response(),
+                                    middle_gpio_level_response = this->middle_gpio_level_response(),
+                                    end_gpio_level_response = this->end_gpio_level_response();
+                    LOGGER_IS_LOGGED_INFO("...(0 <= (" << result << " = gpio_implement.get_value(" << gpio << ")))");
+                    response.assign(begin_gpio_level_response);
+                    response.append(gpio_level_response_gpio);
+                    response.append(middle_gpio_level_response);
+                    response.append(gpio_level_response_level);
+                    response.append(end_gpio_level_response);
+                } else {
+                    LOGGER_IS_LOGGED_INFO("...failed on (0 <= (" << result << " = gpio_implement.set_value(" << gpio << ")))");
+                }
+            }
         } else {
             LOGGER_IS_LOGGED_INFO("...failed on (0 <= (" << result << " = gpio_implement.set_value(" << gpio << ", " << level << ")))");
         }
@@ -344,6 +348,8 @@ protected:
         }
         return err;
     }
+    //////////////////////////////////////////////////////////////////////////
+
     //////////////////////////////////////////////////////////////////////////
     /// ...prepare_response_to_unknown_request_run
     virtual int default_prepare_response_to_unknown_request_run(string_t& response, const string_t& request, int argc, char_t** argv, char_t** env) {
@@ -618,6 +624,162 @@ protected:
             LOGGER_IS_LOGGED_INFO("...(!(" << err << " = extends::default_prepare_response_to_unknown_request_run(\"" << response << "\", \"" << request << "\", argc, argv, env)))");
         } else {
             LOGGER_IS_LOGGED_INFO("...failed on (!(" << err << " = extends::default_prepare_response_to_unknown_request_run(\"" << response << "\", \"" << request << "\", argc, argv, env)))");
+        }
+        return err;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    /// ...prepare_to_process_unknown_response_run
+    virtual int default_prepare_to_process_unknown_response_run(string_t& response, int argc, char_t** argv, char_t** env) {
+        int err = 0;
+        size_t length = 0;
+        const char_t* chars = 0;
+        const string_t& request = this->request();
+
+        LOGGER_IS_LOGGED_INFO("((chars = response.has_chars(length)))...");
+        if ((chars = response.has_chars(length))) {
+            const string_t& begin_gpio_level_response = this->begin_gpio_level_response(),
+                            middle_gpio_level_response = this->middle_gpio_level_response(),
+                            end_gpio_level_response = this->end_gpio_level_response();
+            size_t begin_gpio_level_response_length = 0,
+                   middle_gpio_level_response_length = 0,
+                   end_gpio_level_response_length = 0,
+                   gpio_level_response_length = 0;
+            LOGGER_IS_LOGGED_INFO("...((\"" << chars << "\" = response.has_chars(" << length << ")))");
+
+            gpio_level_response_length = (begin_gpio_level_response_length = begin_gpio_level_response.length());
+            gpio_level_response_length += (middle_gpio_level_response_length = middle_gpio_level_response.length());
+            gpio_level_response_length += (end_gpio_level_response_length = end_gpio_level_response.length());
+
+            LOGGER_IS_LOGGED_INFO("((gpio_level_response_length = " << gpio_level_response_length << " < (" << length << ")))...");
+            if ((gpio_level_response_length < (length))) {
+                size_t compare_length = begin_gpio_level_response_length;
+                const char_t* compare_chars = chars;
+                string_t compare(compare_chars, compare_length);
+
+                LOGGER_IS_LOGGED_INFO("...((gpio_level_response_length = " << gpio_level_response_length << " < (" << length << ")))");
+                LOGGER_IS_LOGGED_INFO("(!(begin_gpio_level_response.compare(\"" << compare << "\")))...");
+                if (!(begin_gpio_level_response.compare(compare))) {
+                    LOGGER_IS_LOGGED_INFO("...(!(begin_gpio_level_response.compare(\"" << compare << "\")))");
+
+                    LOGGER_IS_LOGGED_INFO("compare_chars = ((\"" << chars << "\" + " << length << ") - " << end_gpio_level_response_length << ")...");
+                    compare_chars = ((chars + length) - end_gpio_level_response_length);
+                    LOGGER_IS_LOGGED_INFO("...compare_chars = \"" << compare_chars << "\" = ((\"" << chars << "\" + " << length << ") - " << end_gpio_level_response_length << ")...");
+                    LOGGER_IS_LOGGED_INFO("compare.assign(\"" << compare_chars << "\", " << end_gpio_level_response_length << ")...");
+                    compare.assign(compare_chars, compare_length = end_gpio_level_response_length);
+
+                    LOGGER_IS_LOGGED_INFO("(!(end_gpio_level_response.compare(\"" << compare << "\")))...");
+                    if (!(end_gpio_level_response.compare(compare))) {
+                        LOGGER_IS_LOGGED_INFO("...(!(end_gpio_level_response.compare(\"" << compare << "\")))");
+
+                        LOGGER_IS_LOGGED_INFO("compare_chars = ((\"" << chars << "\" + " << begin_gpio_level_response_length << "))...");
+                        compare_chars = ((chars + begin_gpio_level_response_length));
+                        LOGGER_IS_LOGGED_INFO("...compare_chars = \"" << compare_chars << "\" = ((\"" << chars << "\" + " << length << "))...");
+                        LOGGER_IS_LOGGED_INFO("compare.assign(\"" << compare_chars << "\", " << (length - begin_gpio_level_response_length) << ")...");
+                        compare.assign(compare_chars, compare_length = (length - begin_gpio_level_response_length));
+                        
+                        LOGGER_IS_LOGGED_INFO("((compare_chars = compare.has_chars(compare_length)))...");
+                        if ((compare_chars = compare.has_chars(compare_length))) {
+                            LOGGER_IS_LOGGED_INFO("...((compare_chars = \"" << compare_chars << "\" = compare.has_chars(" << compare_length << ")))");
+
+                            LOGGER_IS_LOGGED_INFO("((middle_gpio_level_response_length = " << middle_gpio_level_response_length << " < (" << compare_length << ")))...");
+                            if ((middle_gpio_level_response_length < (compare_length))) {
+                                size_t begin_length = 0;
+                                const char_t* begin_chars = 0;
+
+                                LOGGER_IS_LOGGED_INFO("...((middle_gpio_level_response_length = " << middle_gpio_level_response_length << " < (" << compare_length << ")))");
+                                LOGGER_IS_LOGGED_INFO("((begin_chars = middle_gpio_level_response.has_chars(begin_length)))...");
+                                if ((begin_chars = middle_gpio_level_response.has_chars(begin_length))) {
+                                    size_t value_length = 0, value_compare_length = compare_length;
+                                    const char_t* value_compare_chars = compare_chars;
+                                    const char_t* value_chars = value_compare_chars;
+                                    char_t begin_char = *begin_chars;
+
+                                    LOGGER_IS_LOGGED_INFO("...((begin_chars = \"" << begin_chars << "\" = middle_gpio_level_response.has_chars(" << begin_length << ")))");
+                                    for (char_t value_char = *(value_compare_chars); 
+                                         (value_char != begin_char) && (0 < value_compare_length); 
+                                         value_char = *(++value_compare_chars), --value_compare_length) {
+                                        ++value_length;
+                                    }
+                                    LOGGER_IS_LOGGED_INFO("(0 < (value_length = " << value_length << "))...");
+                                    if (0 < (value_length)) {
+                                        string_t value_string(value_chars, value_length);
+                                        int value = value_string.to_signed();
+
+                                        LOGGER_IS_LOGGED_INFO("...(0 < (value_length = " << value_length << "))");
+                                        LOGGER_IS_LOGGED_INFO("(0 <= (value = " << value << "))...");
+                                        if (0 <= (value)) {
+                                            int gpio = value;
+                                            LOGGER_IS_LOGGED_INFO("...(0 <= (value = " << value << "))");
+                                            LOGGER_IS_LOGGED_INFO("...gpio = " << value << "");
+                                            LOGGER_IS_LOGGED_INFO("value_chars = ((\"" << value_chars << "\" + " << value_length << ") + " << middle_gpio_level_response_length << ")...");
+                                            value_chars = ((value_chars + value_length) + middle_gpio_level_response_length);
+                                            LOGGER_IS_LOGGED_INFO("...value_chars = \"" << value_chars << "\"");
+                                            LOGGER_IS_LOGGED_INFO("((begin_chars = end_gpio_level_response.has_chars(begin_length)))...");
+                                            if ((begin_chars = end_gpio_level_response.has_chars(begin_length))) {
+                                                LOGGER_IS_LOGGED_INFO("...((begin_chars = \"" << begin_chars << "\" = end_gpio_level_response.has_chars(" << begin_length << ")))");
+                                                value_length = 0;
+                                                value_compare_length = value_chars - chars;
+                                                value_compare_chars = value_chars;
+                                                begin_char = *begin_chars;
+                                                for (char_t value_char = *(value_compare_chars); 
+                                                     (value_char != begin_char) && (0 < value_compare_length); 
+                                                     value_char = *(++value_compare_chars), --value_compare_length) {
+                                                    ++value_length;
+                                                }
+                                                LOGGER_IS_LOGGED_INFO("(0 < (value_length = " << value_length << "))...");
+                                                if (0 < (value_length)) {
+                                                    LOGGER_IS_LOGGED_INFO("...(0 < (value_length = " << value_length << "))");
+                                                    LOGGER_IS_LOGGED_INFO("value_string.assign(\"" << value_chars << "\", " << value_length << ")...");
+                                                    value_string.assign(value_chars, value_length);
+                                                    value = value_string.to_signed();
+                                                    LOGGER_IS_LOGGED_INFO("(0 <= (value = " << value << "))...");
+                                                    if (0 <= (value)) {
+                                                        int level = value;
+                                                        LOGGER_IS_LOGGED_INFO("...(0 <= (value = " << value << "))");
+                                                        LOGGER_IS_LOGGED_INFO("...level = " << value << "");
+                                                        LOGGER_IS_LOGGED_INFO("return err...");
+                                                        return err;
+                                                    } else {
+                                                        LOGGER_IS_LOGGED_INFO("...failed on (0 <= (value = " << value << "))");
+                                                    }
+                                                } else {
+                                                    LOGGER_IS_LOGGED_INFO("...failed on (0 < (value_length = " << value_length << "))");
+                                                }
+                                            } else {
+                                                LOGGER_IS_LOGGED_INFO("...failed on ((begin_chars = end_gpio_level_response.has_chars(" << begin_length << ")))");
+                                            }
+                                        } else {
+                                            LOGGER_IS_LOGGED_INFO("...failed on (0 <= (" << value << "))");
+                                        }
+                                    } else {
+                                        LOGGER_IS_LOGGED_INFO("...failed on (0 < (value_length = " << value_length << "))");
+                                    }
+                                } else {
+                                    LOGGER_IS_LOGGED_INFO("...failed on ((begin_chars = middle_gpio_level_response.has_chars(" << begin_length << ")))");
+                                }
+                            } else {
+                                LOGGER_IS_LOGGED_INFO("...failed on ((middle_gpio_level_response_length = " << middle_gpio_level_response_length << " < (" << compare_length << ")))");
+                            }
+                        } else {
+                            LOGGER_IS_LOGGED_INFO("...failed on ((compare_chars = compare.has_chars(" << compare_length << ")))");
+                        }
+                    } else {
+                        LOGGER_IS_LOGGED_INFO("...failed on (!(end_gpio_level_response.compare(\"" << compare << "\")))");
+                    }
+                } else {
+                    LOGGER_IS_LOGGED_INFO("...failed on (!(begin_gpio_level_response.compare(\"" << compare << "\")))");
+                }
+            } else {
+                LOGGER_IS_LOGGED_INFO("...failed on ((gpio_level_response_length = " << gpio_level_response_length << " < (" << length << ")))");
+            }
+        } else {
+            LOGGER_IS_LOGGED_INFO("...failed on ((chars = request.has_chars(" << length << ")))");
+        }
+        LOGGER_IS_LOGGED_INFO("(!(err = extends::default_prepare_to_process_unknown_response_run(response, argc, argv, env)))...");
+        if (!(err = extends::default_prepare_to_process_unknown_response_run(response, argc, argv, env))) {
+            LOGGER_IS_LOGGED_INFO("...(!(" << err << " = extends::default_prepare_to_process_unknown_response_run(response, argc, argv, env)))");
+        } else {
+            LOGGER_IS_LOGGED_INFO("...failed on(!(" << err << " = extends::default_prepare_to_process_unknown_response_run(response, argc, argv, env)))");
         }
         return err;
     }
@@ -910,6 +1072,12 @@ protected:
     virtual string_t& system_restart_response() const {
         return (string_t&)system_restart_response_;
     }
+    virtual string_t& restart_request() const {
+        return (string_t&)system_restart_request();
+    }
+    virtual string_t& restart_response() const {
+        return (string_t&)system_restart_response();
+    }
     //////////////////////////////////////////////////////////////////////////
     virtual string_t& set_system_start_request() {
         string_t& to = this->system_start_request();
@@ -921,6 +1089,12 @@ protected:
     }
     virtual string_t& system_start_response() const {
         return (string_t&)system_start_response_;
+    }
+    virtual string_t& start_request() const {
+        return (string_t&)system_start_request();
+    }
+    virtual string_t& start_response() const {
+        return (string_t&)system_start_response();
     }
     //////////////////////////////////////////////////////////////////////////
     virtual string_t& set_system_stop_request() {
@@ -934,23 +1108,14 @@ protected:
     virtual string_t& system_stop_response() const {
         return (string_t&)system_stop_response_;
     }
+    virtual string_t& stop_request() const {
+        return (string_t&)system_stop_request();
+    }
+    virtual string_t& stop_response() const {
+        return (string_t&)system_stop_response();
+    }
     virtual string_t& system_state_unknown_response() const {
         return (string_t&)system_state_unknown_response_;
-    }
-    //////////////////////////////////////////////////////////////////////////
-    virtual string_t& set_system_info_request() {
-        string_t& to = this->system_info_request();
-        set_request(to);
-        return request();
-    }
-    virtual string_t& system_info_request() const {
-        return (string_t&)system_info_request_;
-    }
-    virtual string_t& system_info_response() const {
-        return (string_t&)system_info_response_;
-    }
-    virtual string_t& system_info_unknown_response() const {
-        return (string_t&)system_info_unknown_response_;
     }
     //////////////////////////////////////////////////////////////////////////
 
@@ -990,7 +1155,6 @@ protected:
 protected:
     string_t system_restart_request_, system_start_request_, system_stop_request_;
     string_t system_restart_response_, system_start_response_, system_stop_response_, system_state_unknown_response_;
-    string_t system_info_request_, system_info_response_, system_info_unknown_response_;
     string_t invalid_request_, invalid_response_;
     string_t unknown_request_, unknown_response_;
     string_t request_, response_;
